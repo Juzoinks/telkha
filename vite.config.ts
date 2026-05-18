@@ -10,6 +10,9 @@ import tailwindcss from '@tailwindcss/vite'
 import tsConfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-dom/client'],
+  },
   plugins: [
     tailwindcss(),
     tsConfigPaths({ projects: ['./tsconfig.json'] }),
