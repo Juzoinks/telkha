@@ -49,7 +49,7 @@ export function AppShell() {
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
-      <aside className="hidden w-60 shrink-0 flex-col border-r border-border bg-card md:flex">
+      <aside className="flex w-60 shrink-0 flex-col border-r border-border bg-card">
         <div className="flex h-14 items-center gap-2 border-b border-border px-4">
           <Radio className="h-5 w-5 text-status-operational" />
           <div>
@@ -144,43 +144,17 @@ export function AppShell() {
             </div>
           )}
           {!session && (
-            <Link to="/login" className="block rounded-md bg-primary px-3 py-2 text-center text-xs font-medium text-primary-foreground">
+            <Link
+              to="/login"
+              className="block rounded-md bg-primary px-3 py-2 text-center text-xs font-medium text-primary-foreground"
+            >
               Sign in
             </Link>
           )}
         </div>
       </aside>
 
-      {/* Mobile top bar */}
       <div className="flex flex-1 flex-col">
-        <header className="flex h-14 items-center gap-3 border-b border-border bg-card px-4 md:hidden">
-          <Radio className="h-5 w-5 text-status-operational" />
-          <div className="text-sm font-semibold">NOC Platform</div>
-          <div className="ml-auto flex items-center gap-2 text-xs">
-            <StatusDot status={cloudStatus} />
-            <span className="text-muted-foreground">LEO</span>
-            {session && <NotificationBell />}
-            <ThemeToggle />
-          </div>
-        </header>
-        <nav className="flex gap-1 overflow-x-auto border-b border-border bg-card px-2 py-1.5 md:hidden">
-          {navItems.map((item) => {
-            const active =
-              item.to === "/" ? location.pathname === "/" : location.pathname.startsWith(item.to);
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={cn(
-                  "shrink-0 rounded-md px-3 py-1.5 text-xs",
-                  active ? "bg-accent text-accent-foreground" : "text-muted-foreground",
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
         <main className="flex-1 overflow-auto">
           <Outlet />
         </main>

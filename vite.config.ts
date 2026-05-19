@@ -1,36 +1,22 @@
-// @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
-// or the app will break with duplicate plugins:
-//   - tanstackStart, viteReact, tailwindcss, tsConfigPaths, cloudflare (build-only),
-//     componentTagger (dev-only), VITE_* env injection, @ path alias, React/TanStack dedupe,
-//     error logger plugins, and sandbox detection (port/host/strictPort).
-// You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from 'vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import tailwindcss from '@tailwindcss/vite'
 import tsConfigPaths from 'vite-tsconfig-paths'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  optimizeDeps: {
-    include: ['react', 'react-dom', 'react-dom/client'],
-  },
   plugins: [
+    tanstackStart({
+      client: { entry: './src/client.tsx' },
+      server: { entry: './src/entry-server.tsx' },
+    }),
     tailwindcss(),
     tsConfigPaths({ projects: ['./tsconfig.json'] }),
-    tanstackStart({
-      client: {
-        entry: './src/client.tsx',
-      },
-      server: {
-        entry: './src/entry-server.tsx',
-      },
-    }),
+    react(),
   ],
   resolve: {
-    alias: {
-      '@': `${process.cwd()}/src`,
-    },
+    alias: { '@': `${process.cwd()}/src` },
+    dedupe: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime'],
   },
-  server: {
-    port: 8080,
-  },
+  server: { port: 8081 },
 })

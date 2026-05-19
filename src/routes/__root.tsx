@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Outlet, createRootRoute, ScrollRestoration, HeadContent, Scripts } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from '@/lib/auth/AuthProvider'
+import { AppShell } from '@/components/noc/AppShell'
 import '@/styles.css'
 
 const queryClient = new QueryClient()
@@ -18,16 +19,14 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <HeadContent />
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <div className="min-h-screen bg-background text-foreground">
-              <Outlet />
-            </div>
+            <AppShell />
           </AuthProvider>
         </QueryClientProvider>
         <ScrollRestoration />
