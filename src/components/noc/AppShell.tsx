@@ -22,7 +22,7 @@ const STAFF_NAV = [
 ];
 const ADMIN_NAV = [
   { to: "/admin", label: "User Access", icon: ShieldCheck },
-  { to: "/admin/audit", label: "Audit Log", icon: ScrollText },
+  { to: "/audit", label: "Audit Log", icon: ScrollText },
 ];
 
 const TEACHER_NAV = [{ to: "/report", label: "Report Issue", icon: AlertCircle }];

@@ -9,15 +9,39 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TicketsRouteImport } from './routes/tickets'
+import { Route as SchoolsRouteImport } from './routes/schools'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as ReportRouteImport } from './routes/report'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as AuditRouteImport } from './routes/audit'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as ApiAlertsTelegramRouteImport } from './routes/api.alerts.telegram'
 import { Route as ApiPublicHooksRuijiePollRouteImport } from './routes/api/public/hooks/ruijie-poll'
 
+const TicketsRoute = TicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SchoolsRoute = SchoolsRouteImport.update({
+  id: '/schools',
+  path: '/schools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportRoute = ReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -26,6 +50,11 @@ const LoginRoute = LoginRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditRoute = AuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnalyticsRoute = AnalyticsRouteImport.update({
@@ -43,11 +72,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminAuditRoute = AdminAuditRouteImport.update({
-  id: '/audit',
-  path: '/audit',
-  getParentRoute: () => AdminRoute,
-} as any)
 const ApiAlertsTelegramRoute = ApiAlertsTelegramRouteImport.update({
   id: '/api/alerts/telegram',
   path: '/api/alerts/telegram',
@@ -62,32 +86,44 @@ const ApiPublicHooksRuijiePollRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
+  '/admin': typeof AdminRoute
   '/analytics': typeof AnalyticsRoute
+  '/audit': typeof AuditRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
-  '/admin/audit': typeof AdminAuditRoute
+  '/report': typeof ReportRoute
+  '/reports': typeof ReportsRoute
+  '/schools': typeof SchoolsRoute
+  '/tickets': typeof TicketsRoute
   '/api/alerts/telegram': typeof ApiAlertsTelegramRoute
   '/api/public/hooks/ruijie-poll': typeof ApiPublicHooksRuijiePollRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
+  '/admin': typeof AdminRoute
   '/analytics': typeof AnalyticsRoute
+  '/audit': typeof AuditRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
-  '/admin/audit': typeof AdminAuditRoute
+  '/report': typeof ReportRoute
+  '/reports': typeof ReportsRoute
+  '/schools': typeof SchoolsRoute
+  '/tickets': typeof TicketsRoute
   '/api/alerts/telegram': typeof ApiAlertsTelegramRoute
   '/api/public/hooks/ruijie-poll': typeof ApiPublicHooksRuijiePollRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
+  '/admin': typeof AdminRoute
   '/analytics': typeof AnalyticsRoute
+  '/audit': typeof AuditRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
-  '/admin/audit': typeof AdminAuditRoute
+  '/report': typeof ReportRoute
+  '/reports': typeof ReportsRoute
+  '/schools': typeof SchoolsRoute
+  '/tickets': typeof TicketsRoute
   '/api/alerts/telegram': typeof ApiAlertsTelegramRoute
   '/api/public/hooks/ruijie-poll': typeof ApiPublicHooksRuijiePollRoute
 }
@@ -97,9 +133,13 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/analytics'
+    | '/audit'
     | '/forgot-password'
     | '/login'
-    | '/admin/audit'
+    | '/report'
+    | '/reports'
+    | '/schools'
+    | '/tickets'
     | '/api/alerts/telegram'
     | '/api/public/hooks/ruijie-poll'
   fileRoutesByTo: FileRoutesByTo
@@ -107,9 +147,13 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/analytics'
+    | '/audit'
     | '/forgot-password'
     | '/login'
-    | '/admin/audit'
+    | '/report'
+    | '/reports'
+    | '/schools'
+    | '/tickets'
     | '/api/alerts/telegram'
     | '/api/public/hooks/ruijie-poll'
   id:
@@ -117,25 +161,62 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/analytics'
+    | '/audit'
     | '/forgot-password'
     | '/login'
-    | '/admin/audit'
+    | '/report'
+    | '/reports'
+    | '/schools'
+    | '/tickets'
     | '/api/alerts/telegram'
     | '/api/public/hooks/ruijie-poll'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRouteWithChildren
+  AdminRoute: typeof AdminRoute
   AnalyticsRoute: typeof AnalyticsRoute
+  AuditRoute: typeof AuditRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  ReportRoute: typeof ReportRoute
+  ReportsRoute: typeof ReportsRoute
+  SchoolsRoute: typeof SchoolsRoute
+  TicketsRoute: typeof TicketsRoute
   ApiAlertsTelegramRoute: typeof ApiAlertsTelegramRoute
   ApiPublicHooksRuijiePollRoute: typeof ApiPublicHooksRuijiePollRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tickets': {
+      id: '/tickets'
+      path: '/tickets'
+      fullPath: '/tickets'
+      preLoaderRoute: typeof TicketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schools': {
+      id: '/schools'
+      path: '/schools'
+      fullPath: '/schools'
+      preLoaderRoute: typeof SchoolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/report': {
+      id: '/report'
+      path: '/report'
+      fullPath: '/report'
+      preLoaderRoute: typeof ReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -148,6 +229,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit': {
+      id: '/audit'
+      path: '/audit'
+      fullPath: '/audit'
+      preLoaderRoute: typeof AuditRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/analytics': {
@@ -171,13 +259,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/audit': {
-      id: '/admin/audit'
-      path: '/audit'
-      fullPath: '/admin/audit'
-      preLoaderRoute: typeof AdminAuditRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/api/alerts/telegram': {
       id: '/api/alerts/telegram'
       path: '/api/alerts/telegram'
@@ -195,22 +276,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AdminRouteChildren {
-  AdminAuditRoute: typeof AdminAuditRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminAuditRoute: AdminAuditRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRouteWithChildren,
+  AdminRoute: AdminRoute,
   AnalyticsRoute: AnalyticsRoute,
+  AuditRoute: AuditRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  ReportRoute: ReportRoute,
+  ReportsRoute: ReportsRoute,
+  SchoolsRoute: SchoolsRoute,
+  TicketsRoute: TicketsRoute,
   ApiAlertsTelegramRoute: ApiAlertsTelegramRoute,
   ApiPublicHooksRuijiePollRoute: ApiPublicHooksRuijiePollRoute,
 }
