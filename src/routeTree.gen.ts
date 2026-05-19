@@ -19,8 +19,8 @@ import { Route as AuditRouteImport } from './routes/audit'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TeacherTeacherIndexRouteImport } from './routes/teacher/teacher.index'
-import { Route as TeacherTeacherLoginRouteImport } from './routes/teacher/teacher.login'
+import { Route as TeacherIndexRouteImport } from './routes/teacher/index'
+import { Route as TeacherLoginRouteImport } from './routes/teacher/login'
 import { Route as ApiAlertsTelegramRouteImport } from './routes/api.alerts.telegram'
 import { Route as ApiPublicHooksRuijiePollRouteImport } from './routes/api/public/hooks/ruijie-poll'
 
@@ -74,14 +74,14 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TeacherTeacherIndexRoute = TeacherTeacherIndexRouteImport.update({
-  id: '/teacher/teacher/',
-  path: '/teacher/teacher/',
+const TeacherIndexRoute = TeacherIndexRouteImport.update({
+  id: '/teacher/',
+  path: '/teacher/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TeacherTeacherLoginRoute = TeacherTeacherLoginRouteImport.update({
-  id: '/teacher/teacher/login',
-  path: '/teacher/teacher/login',
+const TeacherLoginRoute = TeacherLoginRouteImport.update({
+  id: '/teacher/login',
+  path: '/teacher/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAlertsTelegramRoute = ApiAlertsTelegramRouteImport.update({
@@ -107,9 +107,9 @@ export interface FileRoutesByFullPath {
   '/reports': typeof ReportsRoute
   '/schools': typeof SchoolsRoute
   '/tickets': typeof TicketsRoute
+  '/teacher/login': typeof TeacherLoginRoute
+  '/teacher/': typeof TeacherIndexRoute
   '/api/alerts/telegram': typeof ApiAlertsTelegramRoute
-  '/teacher/teacher/login': typeof TeacherTeacherLoginRoute
-  '/teacher/teacher/': typeof TeacherTeacherIndexRoute
   '/api/public/hooks/ruijie-poll': typeof ApiPublicHooksRuijiePollRoute
 }
 export interface FileRoutesByTo {
@@ -123,9 +123,9 @@ export interface FileRoutesByTo {
   '/reports': typeof ReportsRoute
   '/schools': typeof SchoolsRoute
   '/tickets': typeof TicketsRoute
+  '/teacher/login': typeof TeacherLoginRoute
+  '/teacher': typeof TeacherIndexRoute
   '/api/alerts/telegram': typeof ApiAlertsTelegramRoute
-  '/teacher/teacher/login': typeof TeacherTeacherLoginRoute
-  '/teacher/teacher': typeof TeacherTeacherIndexRoute
   '/api/public/hooks/ruijie-poll': typeof ApiPublicHooksRuijiePollRoute
 }
 export interface FileRoutesById {
@@ -140,9 +140,9 @@ export interface FileRoutesById {
   '/reports': typeof ReportsRoute
   '/schools': typeof SchoolsRoute
   '/tickets': typeof TicketsRoute
+  '/teacher/login': typeof TeacherLoginRoute
+  '/teacher/': typeof TeacherIndexRoute
   '/api/alerts/telegram': typeof ApiAlertsTelegramRoute
-  '/teacher/teacher/login': typeof TeacherTeacherLoginRoute
-  '/teacher/teacher/': typeof TeacherTeacherIndexRoute
   '/api/public/hooks/ruijie-poll': typeof ApiPublicHooksRuijiePollRoute
 }
 export interface FileRouteTypes {
@@ -158,9 +158,9 @@ export interface FileRouteTypes {
     | '/reports'
     | '/schools'
     | '/tickets'
+    | '/teacher/login'
+    | '/teacher/'
     | '/api/alerts/telegram'
-    | '/teacher/teacher/login'
-    | '/teacher/teacher/'
     | '/api/public/hooks/ruijie-poll'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -174,9 +174,9 @@ export interface FileRouteTypes {
     | '/reports'
     | '/schools'
     | '/tickets'
+    | '/teacher/login'
+    | '/teacher'
     | '/api/alerts/telegram'
-    | '/teacher/teacher/login'
-    | '/teacher/teacher'
     | '/api/public/hooks/ruijie-poll'
   id:
     | '__root__'
@@ -190,9 +190,9 @@ export interface FileRouteTypes {
     | '/reports'
     | '/schools'
     | '/tickets'
+    | '/teacher/login'
+    | '/teacher/'
     | '/api/alerts/telegram'
-    | '/teacher/teacher/login'
-    | '/teacher/teacher/'
     | '/api/public/hooks/ruijie-poll'
   fileRoutesById: FileRoutesById
 }
@@ -207,9 +207,9 @@ export interface RootRouteChildren {
   ReportsRoute: typeof ReportsRoute
   SchoolsRoute: typeof SchoolsRoute
   TicketsRoute: typeof TicketsRoute
+  TeacherLoginRoute: typeof TeacherLoginRoute
+  TeacherIndexRoute: typeof TeacherIndexRoute
   ApiAlertsTelegramRoute: typeof ApiAlertsTelegramRoute
-  TeacherTeacherLoginRoute: typeof TeacherTeacherLoginRoute
-  TeacherTeacherIndexRoute: typeof TeacherTeacherIndexRoute
   ApiPublicHooksRuijiePollRoute: typeof ApiPublicHooksRuijiePollRoute
 }
 
@@ -285,18 +285,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/teacher/teacher/': {
-      id: '/teacher/teacher/'
-      path: '/teacher/teacher'
-      fullPath: '/teacher/teacher/'
-      preLoaderRoute: typeof TeacherTeacherIndexRouteImport
+    '/teacher/': {
+      id: '/teacher/'
+      path: '/teacher'
+      fullPath: '/teacher/'
+      preLoaderRoute: typeof TeacherIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/teacher/teacher/login': {
-      id: '/teacher/teacher/login'
-      path: '/teacher/teacher/login'
-      fullPath: '/teacher/teacher/login'
-      preLoaderRoute: typeof TeacherTeacherLoginRouteImport
+    '/teacher/login': {
+      id: '/teacher/login'
+      path: '/teacher/login'
+      fullPath: '/teacher/login'
+      preLoaderRoute: typeof TeacherLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/alerts/telegram': {
@@ -327,9 +327,9 @@ const rootRouteChildren: RootRouteChildren = {
   ReportsRoute: ReportsRoute,
   SchoolsRoute: SchoolsRoute,
   TicketsRoute: TicketsRoute,
+  TeacherLoginRoute: TeacherLoginRoute,
+  TeacherIndexRoute: TeacherIndexRoute,
   ApiAlertsTelegramRoute: ApiAlertsTelegramRoute,
-  TeacherTeacherLoginRoute: TeacherTeacherLoginRoute,
-  TeacherTeacherIndexRoute: TeacherTeacherIndexRoute,
   ApiPublicHooksRuijiePollRoute: ApiPublicHooksRuijiePollRoute,
 }
 export const routeTree = rootRouteImport

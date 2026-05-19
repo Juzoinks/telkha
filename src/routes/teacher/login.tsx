@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/teacher/teacher/login")({
+export const Route = createFileRoute("/teacher/login")({
   component: TeacherLoginPage,
 });
 

@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
-import { Activity, AlertCircle, LayoutDashboard, LogOut, School, TicketCheck, Radio, ShieldCheck, Inbox, BarChart3, ScrollText } from "lucide-react";
+import { Activity, AlertCircle, LayoutDashboard, LogOut, School, TicketCheck, Radio, ShieldCheck, Inbox, BarChart3, ScrollText, ExternalLink } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth/AuthProvider";
@@ -18,7 +18,6 @@ const STAFF_NAV = [
   { to: "/tickets", label: "Tickets", icon: TicketCheck },
   { to: "/reports", label: "Reports", icon: Inbox },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
-  { to: "/report", label: "Teacher Portal", icon: AlertCircle },
 ];
 const ADMIN_NAV = [
   { to: "/admin", label: "User Access", icon: ShieldCheck },
@@ -89,6 +88,23 @@ export function AppShell() {
               </Link>
             );
           })}
+
+          {/* Teacher Portal — opens as a standalone page in a new tab */}
+          {isStaff && (
+            <a
+              href="/teacher/teacher/login"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
+                "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+              )}
+            >
+              <AlertCircle className="h-4 w-4" />
+              <span>Teacher Portal</span>
+              <ExternalLink className="ml-auto h-3 w-3 opacity-50" />
+            </a>
+          )}
         </nav>
         <div className="space-y-3 border-t border-border p-3 text-xs">
           <div>

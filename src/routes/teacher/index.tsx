@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { useReportableSchools } from "@/lib/noc/queries";
 
-export const Route = createFileRoute("/teacher/teacher/")({
+export const Route = createFileRoute("/teacher/")({
   component: TeacherPortal,
 });
 
@@ -23,7 +23,7 @@ function TeacherPortal() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!loading && !user) {
-      navigate({ to: "/teacher/login" });
+      navigate({ to: "/teacher/login" }); // resolves to /teacher/login
     }
   }, [loading, user, navigate]);
 
