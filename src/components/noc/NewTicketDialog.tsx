@@ -49,11 +49,11 @@ export function NewTicketDialog() {
         title: title.trim(),
         description: description.trim() || null,
         priority,
-        site_location: siteLocation.trim() || null,
         root_cause: rootCause.trim() || null,
         status: "open",
       });
 
+      console.log("Supabase error:", JSON.stringify(error));
       if (error) throw error;
 
       toast.success("Ticket created", { description: "NOC has been notified." });
