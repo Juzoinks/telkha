@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTicketsPaged, useTicketCounts } from "@/lib/noc/queries";
 import { RequireRole } from "@/components/noc/Guards";
+import { NewTicketDialog } from "@/components/noc/NewTicketDialog";
 
 const PRIORITY_COLOR: Record<string, string> = {
   critical: "bg-red-500/20 text-red-400",
@@ -40,8 +41,13 @@ function TicketsPage() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-semibold">Tickets</h1>
-        <p className="text-sm text-muted-foreground">{total} tickets</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold">Tickets</h1>
+            <p className="text-sm text-muted-foreground">{total} tickets</p>
+          </div>
+          <NewTicketDialog />
+        </div>
       </div>
 
       {/* Status tabs */}

@@ -19,6 +19,8 @@ import { Route as AuditRouteImport } from './routes/audit'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TeacherTeacherIndexRouteImport } from './routes/teacher/teacher.index'
+import { Route as TeacherTeacherLoginRouteImport } from './routes/teacher/teacher.login'
 import { Route as ApiAlertsTelegramRouteImport } from './routes/api.alerts.telegram'
 import { Route as ApiPublicHooksRuijiePollRouteImport } from './routes/api/public/hooks/ruijie-poll'
 
@@ -72,6 +74,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TeacherTeacherIndexRoute = TeacherTeacherIndexRouteImport.update({
+  id: '/teacher/teacher/',
+  path: '/teacher/teacher/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeacherTeacherLoginRoute = TeacherTeacherLoginRouteImport.update({
+  id: '/teacher/teacher/login',
+  path: '/teacher/teacher/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAlertsTelegramRoute = ApiAlertsTelegramRouteImport.update({
   id: '/api/alerts/telegram',
   path: '/api/alerts/telegram',
@@ -96,6 +108,8 @@ export interface FileRoutesByFullPath {
   '/schools': typeof SchoolsRoute
   '/tickets': typeof TicketsRoute
   '/api/alerts/telegram': typeof ApiAlertsTelegramRoute
+  '/teacher/teacher/login': typeof TeacherTeacherLoginRoute
+  '/teacher/teacher/': typeof TeacherTeacherIndexRoute
   '/api/public/hooks/ruijie-poll': typeof ApiPublicHooksRuijiePollRoute
 }
 export interface FileRoutesByTo {
@@ -110,6 +124,8 @@ export interface FileRoutesByTo {
   '/schools': typeof SchoolsRoute
   '/tickets': typeof TicketsRoute
   '/api/alerts/telegram': typeof ApiAlertsTelegramRoute
+  '/teacher/teacher/login': typeof TeacherTeacherLoginRoute
+  '/teacher/teacher': typeof TeacherTeacherIndexRoute
   '/api/public/hooks/ruijie-poll': typeof ApiPublicHooksRuijiePollRoute
 }
 export interface FileRoutesById {
@@ -125,6 +141,8 @@ export interface FileRoutesById {
   '/schools': typeof SchoolsRoute
   '/tickets': typeof TicketsRoute
   '/api/alerts/telegram': typeof ApiAlertsTelegramRoute
+  '/teacher/teacher/login': typeof TeacherTeacherLoginRoute
+  '/teacher/teacher/': typeof TeacherTeacherIndexRoute
   '/api/public/hooks/ruijie-poll': typeof ApiPublicHooksRuijiePollRoute
 }
 export interface FileRouteTypes {
@@ -141,6 +159,8 @@ export interface FileRouteTypes {
     | '/schools'
     | '/tickets'
     | '/api/alerts/telegram'
+    | '/teacher/teacher/login'
+    | '/teacher/teacher/'
     | '/api/public/hooks/ruijie-poll'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -155,6 +175,8 @@ export interface FileRouteTypes {
     | '/schools'
     | '/tickets'
     | '/api/alerts/telegram'
+    | '/teacher/teacher/login'
+    | '/teacher/teacher'
     | '/api/public/hooks/ruijie-poll'
   id:
     | '__root__'
@@ -169,6 +191,8 @@ export interface FileRouteTypes {
     | '/schools'
     | '/tickets'
     | '/api/alerts/telegram'
+    | '/teacher/teacher/login'
+    | '/teacher/teacher/'
     | '/api/public/hooks/ruijie-poll'
   fileRoutesById: FileRoutesById
 }
@@ -184,6 +208,8 @@ export interface RootRouteChildren {
   SchoolsRoute: typeof SchoolsRoute
   TicketsRoute: typeof TicketsRoute
   ApiAlertsTelegramRoute: typeof ApiAlertsTelegramRoute
+  TeacherTeacherLoginRoute: typeof TeacherTeacherLoginRoute
+  TeacherTeacherIndexRoute: typeof TeacherTeacherIndexRoute
   ApiPublicHooksRuijiePollRoute: typeof ApiPublicHooksRuijiePollRoute
 }
 
@@ -259,6 +285,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/teacher/teacher/': {
+      id: '/teacher/teacher/'
+      path: '/teacher/teacher'
+      fullPath: '/teacher/teacher/'
+      preLoaderRoute: typeof TeacherTeacherIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teacher/teacher/login': {
+      id: '/teacher/teacher/login'
+      path: '/teacher/teacher/login'
+      fullPath: '/teacher/teacher/login'
+      preLoaderRoute: typeof TeacherTeacherLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/alerts/telegram': {
       id: '/api/alerts/telegram'
       path: '/api/alerts/telegram'
@@ -288,6 +328,8 @@ const rootRouteChildren: RootRouteChildren = {
   SchoolsRoute: SchoolsRoute,
   TicketsRoute: TicketsRoute,
   ApiAlertsTelegramRoute: ApiAlertsTelegramRoute,
+  TeacherTeacherLoginRoute: TeacherTeacherLoginRoute,
+  TeacherTeacherIndexRoute: TeacherTeacherIndexRoute,
   ApiPublicHooksRuijiePollRoute: ApiPublicHooksRuijiePollRoute,
 }
 export const routeTree = rootRouteImport
