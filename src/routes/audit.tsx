@@ -3,7 +3,7 @@ import { ScrollText } from "lucide-react";
 import { RequireRole } from "@/components/noc/Guards";
 import { useAuditLog } from "@/lib/noc/extra-queries";
 
-export const Route = createFileRoute("/admin/audit")({
+export const Route = createFileRoute("/audit")({
   head: () => ({ meta: [{ title: "Audit Log — Admin" }] }),
   component: () => (
     <RequireRole allow={["admin"]}>
@@ -14,7 +14,6 @@ export const Route = createFileRoute("/admin/audit")({
 
 function AuditPage() {
   const { data: entries = [], isLoading } = useAuditLog();
-
   return (
     <div className="space-y-4 p-4 md:p-6">
       <div>
@@ -25,7 +24,6 @@ function AuditPage() {
           Every role change, school assignment, and ticket update.
         </p>
       </div>
-
       <div className="rounded-lg border border-border bg-card">
         <div className="overflow-auto">
           <table className="w-full text-sm">
