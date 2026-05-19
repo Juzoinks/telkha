@@ -351,9 +351,10 @@ export function useReportCounts() {
   });
 }
 
-export function useReportableSchools() {
+export function useReportableSchools(enabled = true) {
   return useQuery({
     queryKey: qk.reportableSchools,
+    enabled,
     queryFn: async (): Promise<DbReportableSchool[]> => {
       const { data, error } = await supabase.rpc("list_reportable_schools");
       if (error) throw error;

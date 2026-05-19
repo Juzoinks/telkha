@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSchools } from "@/lib/noc/queries";
 import { StatusDot } from "@/components/noc/StatusDot";
 import { RequireRole } from "@/components/noc/Guards";
+import { NewSchoolDialog } from "@/components/noc/NewSchoolDialog";
 
 export const Route = createFileRoute("/schools")({
   component: () => (
@@ -26,9 +27,12 @@ function SchoolsPage() {
 
   return (
     <div className="space-y-6 p-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Schools</h1>
-        <p className="text-sm text-muted-foreground">{schools.length} schools total</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold">Schools</h1>
+          <p className="text-sm text-muted-foreground">{schools.length} schools total</p>
+        </div>
+        <NewSchoolDialog />
       </div>
 
       <div className="flex gap-3">

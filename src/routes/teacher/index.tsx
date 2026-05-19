@@ -2,16 +2,17 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth/AuthProvider";
-import { useReportableSchools } from "@/lib/noc/queries";
 
 export const Route = createFileRoute("/teacher/")({
   component: TeacherPortal,
 });
 
+type School = { id: string; name: string; region: string };
+
 function TeacherPortal() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
-  const { data: schools = [] } = useReportableSchools();
+  const [schools, setSchools] = useState<School[]>([]);
 
   const [schoolId, setSchoolId] = useState("");
   const [type, setType] = useState("no_internet");
@@ -20,12 +21,31 @@ function TeacherPortal() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  // Redirect to login if not authenticated
   useEffect(() => {
     if (!loading && !user) {
-      navigate({ to: "/teacher/login" }); // resolves to /teacher/login
+      navigate({ to: "/teacher/login" });
     }
   }, [loading, user, navigate]);
+
+  // Fetch schools using the session token directly
+  useEffect(() => {
+    if (!user) return;
+
+    async function fetchSchools() {
+      // Get the current session to ensure token is attached
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const { data, error } = await supabase
+        .from("schools")
+        .select("id, name, region")
+        .order("name");
+
+      if (!error && data) setSchools(data as School[]);
+    }
+
+    fetchSchools();
+  }, [user]);
 
   async function handleSubmit() {
     if (!schoolId) return;
@@ -46,7 +66,7 @@ function TeacherPortal() {
     setSubmitting(false);
 
     if (error) {
-      setError("Failed to submit. Please try again.");
+      setError(error?.message ?? "Failed to submit. Please try again.");
     } else {
       setSuccess(true);
       setMessage("");
@@ -67,7 +87,6 @@ function TeacherPortal() {
   return (
     <div className="min-h-screen bg-zinc-950 px-4 py-10">
       <div className="max-w-lg mx-auto space-y-6">
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-semibold text-white">Report an Issue</h1>
@@ -81,26 +100,22 @@ function TeacherPortal() {
           </button>
         </div>
 
-        {/* Logged in as */}
         <p className="text-xs text-zinc-500">
           Signed in as <span className="text-zinc-300">{user?.email}</span>
         </p>
 
-        {/* Success */}
         {success && (
           <div className="rounded-md bg-green-500/10 border border-green-500/20 px-4 py-3 text-sm text-green-400">
             ✅ Report submitted! The NOC team has been notified.
           </div>
         )}
 
-        {/* Error */}
         {error && (
           <div className="rounded-md bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-400">
             {error}
           </div>
         )}
 
-        {/* Form */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 space-y-4">
           <div className="space-y-1">
             <label className="block text-sm font-medium text-zinc-300">School *</label>
