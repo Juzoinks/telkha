@@ -3,10 +3,7 @@ import { useState } from "react";
 import { useTicketsPaged, useTicketCounts } from "@/lib/noc/queries";
 import { RequireRole } from "@/components/noc/Guards";
 import { NewTicketDialog } from "@/components/noc/NewTicketDialog";
-import { supabase } from "@/integrations/supabase/client";
-import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { qk } from "@/lib/noc/queries";
+import { TicketDetailPanel } from "@/components/noc/TicketDetailPanel";
 
 const PRIORITY_COLOR: Record<string, string> = {
   critical: "bg-red-500/20 text-red-400",
@@ -34,9 +31,8 @@ function TicketsPage() {
   const [priority, setPriority] = useState<"all" | "critical" | "high" | "medium" | "low">("all");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
-  const [resolving, setResolving] = useState<string | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<null | Record<string, unknown>>(null);
 
-  const qc = useQueryClient();
   const { data: counts } = useTicketCounts();
   const { data, isLoading } = useTicketsPaged({ status, priority, search, page, pageSize: 25 });
 
@@ -44,55 +40,14 @@ function TicketsPage() {
   const total = data?.total ?? 0;
   const totalPages = Math.ceil(total / 25);
 
-  const resolveTicket = async (ticketId: string, ticketNumber: string, title: string) => {
-    setResolving(ticketId);
-    try {
-      // 1. Mark ticket as resolved
-      const { error: ticketError } = await supabase
-        .from("tickets")
-        .update({ status: "resolved", closed_at: new Date().toISOString() })
-        .eq("id", ticketId);
-
-      if (ticketError) throw ticketError;
-
-      // 2. Log it as a report in teacher_reports
-      const { error: reportError } = await supabase
-        .from("teacher_reports")
-        .insert({
-          type: "ticket_resolved",
-          message: `Ticket ${ticketNumber} resolved: ${title}`,
-          report_status: "confirmed",
-          linked_ticket_id: ticketId,
-          linked_ticket_number: ticketNumber,
-        });
-
-      if (reportError) throw reportError;
-
-      toast.success(`Ticket ${ticketNumber} resolved`);
-      qc.invalidateQueries({ queryKey: ["tickets-paged"] });
-      qc.invalidateQueries({ queryKey: ["ticket-counts"] });
-      qc.invalidateQueries({ queryKey: ["reports-paged"] });
-      qc.invalidateQueries({ queryKey: ["report-counts"] });
-      qc.invalidateQueries({ queryKey: qk.reports });
-    } catch (err) {
-      toast.error("Could not resolve ticket", {
-        description: err instanceof Error ? err.message : String(err),
-      });
-    } finally {
-      setResolving(null);
-    }
-  };
-
   return (
     <div className="space-y-6 p-6">
-      <div>
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold">Tickets</h1>
-            <p className="text-sm text-muted-foreground">{total} tickets</p>
-          </div>
-          <NewTicketDialog />
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold">Tickets</h1>
+          <p className="text-sm text-muted-foreground">{total} tickets</p>
         </div>
+        <NewTicketDialog />
       </div>
 
       {/* Status tabs */}
@@ -151,21 +106,24 @@ function TicketsPage() {
                   <th className="px-4 py-3 text-left">Title</th>
                   <th className="px-4 py-3 text-left">Priority</th>
                   <th className="px-4 py-3 text-left">Status</th>
-                  <th className="px-4 py-3 text-left">Root Cause</th>
+                  <th className="px-4 py-3 text-left">Assigned To</th>
                   <th className="px-4 py-3 text-left">Created</th>
-                  <th className="px-4 py-3 text-left">Done</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {rows.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-4 py-6 text-center text-muted-foreground">
+                    <td colSpan={6} className="px-4 py-6 text-center text-muted-foreground">
                       No tickets found.
                     </td>
                   </tr>
                 )}
                 {rows.map((ticket) => (
-                  <tr key={ticket.id} className="hover:bg-accent/30 transition-colors">
+                  <tr
+                    key={ticket.id}
+                    onClick={() => setSelectedTicket(ticket as unknown as Record<string, unknown>)}
+                    className="hover:bg-accent/30 transition-colors cursor-pointer"
+                  >
                     <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
                       {ticket.ticket_number}
                     </td>
@@ -180,22 +138,11 @@ function TicketsPage() {
                         {ticket.status.replace("_", " ")}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground text-xs">{ticket.root_cause}</td>
+                    <td className="px-4 py-3 text-muted-foreground text-xs">
+                      {ticket.assignee_name ?? "—"}
+                    </td>
                     <td className="px-4 py-3 text-muted-foreground text-xs">
                       {new Date(ticket.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-3">
-                      {ticket.status !== "resolved" ? (
-                        <input
-                          type="checkbox"
-                          disabled={resolving === ticket.id}
-                          onChange={() => resolveTicket(ticket.id, ticket.ticket_number, ticket.title)}
-                          className="h-4 w-4 cursor-pointer accent-green-500"
-                          title="Mark as resolved"
-                        />
-                      ) : (
-                        <span className="text-green-500 text-xs">✓</span>
-                      )}
                     </td>
                   </tr>
                 ))}
@@ -205,9 +152,7 @@ function TicketsPage() {
 
           {totalPages > 1 && (
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">
-                Page {page + 1} of {totalPages}
-              </span>
+              <span className="text-muted-foreground">Page {page + 1} of {totalPages}</span>
               <div className="flex gap-2">
                 <button
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
@@ -227,6 +172,14 @@ function TicketsPage() {
             </div>
           )}
         </>
+      )}
+
+      {/* Ticket detail side panel */}
+      {selectedTicket && (
+        <TicketDetailPanel
+          ticket={selectedTicket as never}
+          onClose={() => setSelectedTicket(null)}
+        />
       )}
     </div>
   );

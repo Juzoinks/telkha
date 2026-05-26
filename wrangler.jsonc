@@ -4,4 +4,8 @@
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  "vars": {
+    "TELEGRAM_BOT_TOKEN": "8902233321:AAGF8wqqq25s43lmT6zxVgP_BYcycHjZyoA",
+    "TELEGRAM_CHAT_ID": "8404234488"
+  }
 }

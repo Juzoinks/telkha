@@ -25,10 +25,28 @@ interface DraftTicket {
   report_ids: string[];
 }
 
-async function postTelegramAlert(payload: unknown) {
-  // Scaffold: log to console. Once TELEGRAM_API_KEY + TELEGRAM_CHAT_ID
-  // are set as secrets, swap this for a real fetch to the connector gateway.
-  console.log("[telegram alert]", JSON.stringify(payload));
+async function postTelegramAlert(payload: { text: string }) {
+  const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+  const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+
+  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+    console.log("[telegram alert] not configured, logging only:", payload.text);
+    return;
+  }
+
+  try {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: payload.text,
+        parse_mode: "HTML",
+      }),
+    });
+  } catch (err) {
+    console.error("[telegram alert] failed:", err);
+  }
 }
 
 /** Recompute all tickets from current DB state. Replaces any existing open/in_progress tickets. */
@@ -197,9 +215,10 @@ export const recomputeTickets = createServerFn({ method: "POST" }).handler(async
         meta: { ticket_id: t.id, ticket_number: t.ticket_number, root_cause: t.root_cause },
       })),
     );
-    for (const t of criticals.filter((c) => c.root_cause === "CLOUD_OUTAGE")) {
+    for (const t of criticals) {
+      const emoji = t.root_cause === "CLOUD_OUTAGE" ? "🌐" : "🏫";
       await postTelegramAlert({
-        text: `🚨 CLOUD OUTAGE\n${t.title}\nTicket: ${t.ticket_number}`,
+        text: `🚨 CRITICAL TICKET\n${emoji} ${t.title}\nTicket: ${t.ticket_number}\nCause: ${t.root_cause}`,
       });
     }
   }

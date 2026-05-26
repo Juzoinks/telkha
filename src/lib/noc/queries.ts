@@ -43,6 +43,8 @@ export interface DbTicket {
   device_ids: string[];
   report_ids: string[];
   assignee_id: string | null;
+  assignee_name: string | null;
+  site_location: string | null;
   created_at: string;
   updated_at: string;
   sla_due_at: string | null;
